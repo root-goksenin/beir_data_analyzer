@@ -33,19 +33,19 @@ class DataGettr:
     
     @property
     @lru_cache()
-    def lotte_dev():
+    def lotte_dev(self):
         return get_lotte("dev")
     
     @property
     @lru_cache()   
-    def lotte_test():
+    def lotte_test(self):
         return get_lotte("test")
 
 def get_column_names(out: Dict, data_name: str) -> List[str]:
     names = out.keys()
     data_names = [os.path.split(name)[1] for name in names]
     if "lotte" in data_name:
-        return [" ".join(data.split("_")[:-1]).capitalize() for data in data_names]
+        return [" ".join(data.split("_")[:-1]).capitalize() if "msmarco" not in data else "msmarco" for data in data_names]
     else:
         return data_names
 

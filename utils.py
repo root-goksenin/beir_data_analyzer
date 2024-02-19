@@ -127,10 +127,16 @@ def get_lotte(split = "test"):
     return get_lotte_test() if split == "test" else get_lotte_dev()
 
 def get_beir():
-    print("Beir")
+    data_list = os.listdir("../master_thesis_ai/beir_data")
+    data_list.remove("cqadupstack")
     data_paths = list(
         map(
-            lambda x: os.path.join("../master_thesis_ai/beir_data", x), os.listdir("../master_thesis_ai/beir_data")
+            lambda x: os.path.join("../master_thesis_ai/beir_data", x), data_list
+        )
+    )
+    data_paths += list(
+        map(
+            lambda x: os.path.join("../master_thesis_ai/beir_data/cqadupstack", x), os.listdir("../master_thesis_ai/beir_data/cqadupstack")
         )
     )
     return {data_name: GenericDataLoader(data_name).load("test" if data_name != "../master_thesis_ai/beir_data/msmarco" else "train") for data_name in data_paths}
@@ -169,17 +175,16 @@ def normalized_jaccard_similarity(vocab_1: vocab_tuple, vocab_2: vocab_tuple):
     return up/down
 
 def plot_heatmap(df, title, save):
-    plt.figure(figsize = (10,10))
     df = df.fillna(0)
-    heatmap = sns.heatmap(df, vmin=0, annot=True, cmap='Reds', square = True, annot_kws={"fontsize":15})
+    fig = plt.figure(figsize = (20,20))
+    heatmap = sns.heatmap(df, vmin=0, annot=True, cmap='Reds', fmt = ".2f", square = True, annot_kws={"fontsize":15})
     heatmap.set_title(title, fontdict={'fontsize':24}, pad=16)
     heatmap.figure.savefig(save, bbox_inches='tight')
 
 def plot_normal_heatmap(df, title, save):
-    plt.figure(figsize = (20,10))
+    df = df.fillna(0)
     heatmap = sns.heatmap(df, vmin=0, annot=True, cmap='Reds', fmt=".1%", square = False, annot_kws={"fontsize":12})
-    plt.title(title, fontsize = 25, fontweight="bold")
-    plt.tight_layout()
+    heatmap.set_title(title, fontdict={'fontsize':24}, pad=16)
     heatmap.figure.savefig(save, bbox_inches='tight')
 
 
@@ -244,4 +249,5 @@ def plot_similarity_matrix(matrix: Dict, title: str, save: str, column_names: Li
                 square_df.loc[row_, col_] = 1.0
             else:
                 square_df.loc[row_, col_] = [dict_val[col] for dict_val in matrix[row] if col in dict_val][0]
+    
     plot_heatmap(square_df, title, save)

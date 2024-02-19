@@ -5,7 +5,7 @@
 #SBATCH --job-name=covid-tinybert
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=18
-#SBATCH --time=1:00:00
+#SBATCH --time=4:00:00
 #SBATCH --output=slurm_output_%A.out
 
 
@@ -15,8 +15,11 @@ source activate gpl_env_1
 
 cd $HOME/beir_data_analyzer
 
-data_names = ("beir" "lotte_test" "lotte_dev")
-tasks = ("query_overlap", "corpus_vocab_overlap")
+export LC_ALL=C.UTF-8
+export LANG=C.UTF-8
+
+data_names=("lotte_test")
+tasks=("query_type_distribution")
 
 for data_name in ${data_names[@]}; do
     for task in ${tasks[@]}; do

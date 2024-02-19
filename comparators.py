@@ -8,8 +8,8 @@ from utils import get_word_freq, normalized_jaccard_similarity, plot_heatmap, re
 from collections import defaultdict
 
 class CorpusComparator():
-    def __init__(self, *data_loaders):
-        self.corpus_loaders: Dict[key, GenericDataLoader] = data_loaders
+    def __init__(self, data_loaders):
+        self.corpus_loaders: Dict[str, GenericDataLoader] = data_loaders
     
     def run(self, output_file: str):
         return self.compare_corpuses(output_file)
